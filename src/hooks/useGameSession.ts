@@ -37,7 +37,7 @@ export function useGameSession() {
         nextQuestion()
       }
     },
-    [session, progress.level, recordResult, nextQuestion]
+    [session, recordResult, nextQuestion]
   )
 
   const finishSession = useCallback(() => {
@@ -75,8 +75,8 @@ export function useGameSession() {
   }, [session, applySessionResult, navigate])
 
   const handleTimeout = useCallback(() => {
-    submitAnswer(false, getDifficultyParams(session?.sessionLevel ?? progress.level).timeLimitMs)
-  }, [submitAnswer, session?.sessionLevel, progress.level])
+    submitAnswer(false, getDifficultyParams(session?.sessionLevel ?? 1).timeLimitMs)
+  }, [submitAnswer, session?.sessionLevel])
 
   return { session, start, submitAnswer, handleTimeout, resetSession }
 }

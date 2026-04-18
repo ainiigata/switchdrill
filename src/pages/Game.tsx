@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useGameStore } from '../store/gameStore'
-import { useProgressStore } from '../store/progressStore'
 import { useGameSession } from '../hooks/useGameSession'
 import { useTimer } from '../hooks/useTimer'
 import { getDifficultyParams } from '../utils/difficulty'
@@ -28,9 +27,8 @@ function GameContent({ question, onAnswer }: { question: GameQuestion; onAnswer:
 export function Game() {
   const navigate = useNavigate()
   const { session } = useGameStore()
-  const { progress } = useProgressStore()
   const { submitAnswer, handleTimeout } = useGameSession()
-  const { timeLimitMs } = getDifficultyParams(session?.sessionLevel ?? progress.level)
+  const { timeLimitMs } = getDifficultyParams(session?.sessionLevel ?? 1)
   const { elapsedMs, start, reset } = useTimer(timeLimitMs, handleTimeout)
 
   useEffect(() => {
