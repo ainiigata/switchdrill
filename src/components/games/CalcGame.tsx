@@ -11,7 +11,7 @@ export function CalcGame({ question, onAnswer }: CalcGameProps) {
   return (
     <div className="flex flex-col items-center gap-8">
       <p className="text-5xl font-black text-white">
-        {a} {operator} {b} = ?
+        {a} {operator} {b} ＝ ?
       </p>
       <div className="grid grid-cols-2 gap-4 w-full max-w-xs">
         {choices.map((choice) => (

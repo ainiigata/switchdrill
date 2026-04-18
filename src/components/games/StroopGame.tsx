@@ -27,11 +27,16 @@ const BUTTON_CLASS: Record<ColorName, string> = {
 }
 
 export function StroopGame({ question, onAnswer }: StroopGameProps) {
-  const { word, inkColor, choices } = question
+  const { word, inkColor, choices, askAbout } = question
+  const correctAnswer = askAbout === 'ink' ? inkColor : word
 
   return (
     <div className="flex flex-col items-center gap-8">
-      <p className="text-sm text-gray-400">この文字の「色」を選んでください</p>
+      {askAbout === 'ink' ? (
+        <p className="text-sm text-gray-400">この文字の<span className="text-white font-bold">「色」</span>を選んでください</p>
+      ) : (
+        <p className="text-sm text-orange-400 font-bold">この文字の<span className="text-white">「意味」</span>を選んでください</p>
+      )}
       <p className={`text-7xl font-black ${INK_CLASS[inkColor]}`}>
         {COLOR_LABEL[word]}
       </p>
@@ -39,7 +44,7 @@ export function StroopGame({ question, onAnswer }: StroopGameProps) {
         {choices.map((c) => (
           <button
             key={c}
-            onClick={() => onAnswer(c === inkColor)}
+            onClick={() => onAnswer(c === correctAnswer)}
             className={`py-5 text-xl font-bold rounded-2xl active:scale-95 transition-transform ${BUTTON_CLASS[c]}`}
           >
             {COLOR_LABEL[c]}

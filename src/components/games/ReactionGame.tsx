@@ -11,6 +11,18 @@ const COLOR_MAP: Record<string, string> = {
   green: 'bg-green-500',
 }
 
+const COLOR_LABEL: Record<string, string> = {
+  red: '赤',
+  blue: '青',
+  green: '緑',
+}
+
+const SHAPE_LABEL: Record<string, string> = {
+  circle: '丸',
+  square: '四角',
+  triangle: '三角',
+}
+
 function Shape({ shape, color }: { shape: string; color: string }) {
   const colorClass = COLOR_MAP[color] ?? 'bg-gray-400'
   if (shape === 'circle') {
@@ -19,7 +31,6 @@ function Shape({ shape, color }: { shape: string; color: string }) {
   if (shape === 'square') {
     return <div className={`w-32 h-32 rounded-lg ${colorClass}`} />
   }
-  // triangle
   return (
     <div
       className="w-0 h-0"
@@ -33,13 +44,21 @@ function Shape({ shape, color }: { shape: string; color: string }) {
 }
 
 export function ReactionGame({ question, onAnswer }: ReactionGameProps) {
-  const { targetShape, targetColor, displayShape, displayColor, shouldTap } = question
+  const { targetShape, targetColor, displayShape, displayColor, shouldTap, conditionType } = question
+
+  const conditionLabel =
+    conditionType === 'both'
+      ? `${SHAPE_LABEL[targetShape]}かつ${COLOR_LABEL[targetColor]}`
+      : conditionType === 'shape-only'
+      ? `形が${SHAPE_LABEL[targetShape]}（色は無視）`
+      : `色が${COLOR_LABEL[targetColor]}（形は無視）`
 
   return (
     <div className="flex flex-col items-center gap-8">
-      <p className="text-sm text-gray-400">
-        ターゲット: <span className="text-white font-bold">{targetShape} / {targetColor}</span>
-      </p>
+      <div className="text-center">
+        <p className="text-xs text-gray-400 mb-1">条件に合ったらタップ</p>
+        <p className="text-sm font-bold text-white">{conditionLabel}</p>
+      </div>
       <div className="flex items-center justify-center h-40">
         <Shape shape={displayShape} color={displayColor} />
       </div>

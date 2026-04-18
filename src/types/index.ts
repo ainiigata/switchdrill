@@ -12,7 +12,7 @@ export interface CalcQuestion {
   type: 'calc'
   a: number
   b: number
-  operator: '+' | '-' | '×'
+  operator: '+' | '-' | '×' | '÷'
   answer: number
   choices: number[]
 }
@@ -22,8 +22,9 @@ export type ColorName = 'red' | 'blue' | 'green' | 'yellow'
 export interface StroopQuestion {
   type: 'stroop'
   word: ColorName        // 表示される文字
-  inkColor: ColorName    // 文字の色（正解）
+  inkColor: ColorName    // 文字の色
   choices: ColorName[]
+  askAbout: 'ink' | 'word'  // 'ink': 文字の色を答える / 'word': 文字の意味を答える
 }
 
 // パターン記憶の問題
@@ -51,6 +52,7 @@ export interface ReactionQuestion {
   displayShape: 'circle' | 'square' | 'triangle'
   displayColor: 'red' | 'blue' | 'green'
   shouldTap: boolean   // trueならタップ、falseならスルー
+  conditionType: 'both' | 'shape-only' | 'color-only'  // 判定条件
 }
 
 export type GameQuestion =
