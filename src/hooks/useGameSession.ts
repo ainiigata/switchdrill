@@ -10,7 +10,7 @@ import type { GameType, SessionRecord } from '../types'
 export function useGameSession() {
   const navigate = useNavigate()
   const { session, startSession, recordResult, nextQuestion, resetSession } = useGameStore()
-  const { progress, applySessionResult } = useProgressStore()
+  const { applySessionResult } = useProgressStore()
 
   const start = useCallback((level: number) => {
     const questions = generateSession(level)
