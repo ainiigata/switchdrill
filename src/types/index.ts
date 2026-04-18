@@ -98,9 +98,6 @@ export interface Achievement {
 
 // プレイヤー進捗
 export interface PlayerProgress {
-  level: number              // 1-50
-  exp: number
-  expToNext: number
   streak: number             // 連続プレイ日数
   lastPlayedDate: string | null
   sessionHistory: SessionRecord[]

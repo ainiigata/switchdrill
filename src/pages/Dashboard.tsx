@@ -29,7 +29,6 @@ export function Dashboard() {
     return { subject: GAME_LABEL[type], value: Math.round(avg * 100) }
   })
 
-  const expPercent = Math.round((progress.exp / progress.expToNext) * 100)
   const unlockedAchievements = progress.achievements.filter((a) => a.unlockedAt)
 
   return (
@@ -39,17 +38,13 @@ export function Dashboard() {
         <h1 className="text-2xl font-black">ダッシュボード</h1>
       </div>
 
-      {/* レベル */}
-      <div className="bg-gray-800 rounded-2xl p-6 flex flex-col gap-3">
-        <div className="flex justify-between">
-          <span className="font-bold">Lv.{progress.level}</span>
-          <span className="text-yellow-400">🔥 {progress.streak}日連続</span>
+      {/* ストリーク */}
+      {progress.streak > 0 && (
+        <div className="bg-gray-800 rounded-2xl px-6 py-4 flex justify-between items-center">
+          <span className="text-gray-400 text-sm">連続プレイ</span>
+          <span className="text-yellow-400 font-bold">🔥 {progress.streak}日連続</span>
         </div>
-        <div className="w-full h-3 bg-gray-700 rounded-full overflow-hidden">
-          <div className="h-full bg-indigo-500 rounded-full" style={{ width: `${expPercent}%` }} />
-        </div>
-        <p className="text-xs text-gray-500 text-right">{progress.exp} / {progress.expToNext} EXP</p>
-      </div>
+      )}
 
       {/* スコア推移 */}
       {lineData.length > 0 && (

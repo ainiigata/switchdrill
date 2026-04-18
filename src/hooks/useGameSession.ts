@@ -12,12 +12,11 @@ export function useGameSession() {
   const { session, startSession, recordResult, nextQuestion, resetSession } = useGameStore()
   const { progress, applySessionResult } = useProgressStore()
 
-  const start = useCallback((overrideLevel?: number) => {
-    const level = overrideLevel ?? progress.level
+  const start = useCallback((level: number) => {
     const questions = generateSession(level)
     startSession(questions, level)
     navigate('/game')
-  }, [progress.level, startSession, navigate])
+  }, [startSession, navigate])
 
   const submitAnswer = useCallback(
     (correct: boolean, reactionTimeMs: number) => {

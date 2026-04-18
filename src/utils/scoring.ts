@@ -30,17 +30,5 @@ export function calcRank(totalScore: number, maxPossibleScore: number): SessionR
   return 'D'
 }
 
-/** ランクに応じたEXP獲得量 */
-export function calcExpGain(rank: SessionRecord['rank']): number {
-  const table: Record<SessionRecord['rank'], number> = {
-    S: 150,
-    A: 100,
-    B: 70,
-    C: 50,
-    D: 30,
-  }
-  return table[rank]
-}
-
 /** 10問セッションの最大可能スコアを返す（コンボなし・最速前提） */
 export const MAX_SESSION_SCORE = 1000
