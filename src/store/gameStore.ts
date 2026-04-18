@@ -3,7 +3,7 @@ import type { GameSession, QuestionResult, GameQuestion } from '../types'
 
 interface GameStoreState {
   session: GameSession | null
-  startSession: (questions: GameQuestion[]) => void
+  startSession: (questions: GameQuestion[], sessionLevel: number) => void
   recordResult: (result: QuestionResult) => void
   nextQuestion: () => void
   resetSession: () => void
@@ -12,7 +12,7 @@ interface GameStoreState {
 export const useGameStore = create<GameStoreState>((set) => ({
   session: null,
 
-  startSession: (questions) =>
+  startSession: (questions, sessionLevel) =>
     set({
       session: {
         questions,
@@ -21,6 +21,7 @@ export const useGameStore = create<GameStoreState>((set) => ({
         comboCount: 0,
         totalScore: 0,
         startedAt: Date.now(),
+        sessionLevel,
       },
     }),
 

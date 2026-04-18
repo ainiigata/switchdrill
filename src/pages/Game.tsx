@@ -30,7 +30,7 @@ export function Game() {
   const { session } = useGameStore()
   const { progress } = useProgressStore()
   const { submitAnswer, handleTimeout } = useGameSession()
-  const { timeLimitMs } = getDifficultyParams(progress.level)
+  const { timeLimitMs } = getDifficultyParams(session?.sessionLevel ?? progress.level)
   const { elapsedMs, start, reset } = useTimer(timeLimitMs, handleTimeout)
 
   useEffect(() => {

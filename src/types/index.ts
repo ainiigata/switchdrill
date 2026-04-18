@@ -76,6 +76,7 @@ export interface GameSession {
   comboCount: number
   totalScore: number
   startedAt: number
+  sessionLevel: number  // このセッションで使用する難易度レベル
 }
 
 // セッション完了記録
