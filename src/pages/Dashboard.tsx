@@ -5,10 +5,6 @@ import {
   RadarChart, Radar, PolarGrid, PolarAngleAxis,
 } from 'recharts'
 
-const RANK_COLOR: Record<string, string> = {
-  S: '#facc15', A: '#fb923c', B: '#60a5fa', C: '#4ade80', D: '#9ca3af',
-}
-
 const GAME_LABEL: Record<string, string> = {
   calc: '計算', stroop: 'ストループ', pattern: 'パターン', category: 'カテゴリ', reaction: '反応',
 }
@@ -65,7 +61,7 @@ export function Dashboard() {
               <YAxis stroke="#6b7280" tick={{ fontSize: 10 }} domain={[0, 1000]} />
               <Tooltip
                 contentStyle={{ backgroundColor: '#1f2937', border: 'none', borderRadius: 8 }}
-                formatter={(v: number, _: string, p: any) => [`${v}pt (${p.payload.rank})`, 'スコア']}
+                formatter={(v, _name, p: any) => [`${v}pt (${p.payload.rank})`, 'スコア']}
               />
               <Line type="monotone" dataKey="score" stroke="#6366f1" strokeWidth={2} dot={{ fill: '#6366f1' }} />
             </LineChart>

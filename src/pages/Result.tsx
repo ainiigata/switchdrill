@@ -16,7 +16,7 @@ const GAME_LABEL: Record<string, string> = {
 
 export function Result() {
   const navigate = useNavigate()
-  const { session, resetSession } = useGameStore()
+  const { resetSession } = useGameStore()
   const { progress } = useProgressStore()
   const lastSession = progress.sessionHistory.at(-1)
   const newAchievements = progress.achievements.filter(
