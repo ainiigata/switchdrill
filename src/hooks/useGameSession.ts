@@ -12,16 +12,17 @@ export function useGameSession() {
   const { session, startSession, recordResult, nextQuestion, resetSession } = useGameStore()
   const { progress, applySessionResult } = useProgressStore()
 
-  const start = useCallback(() => {
-    const questions = generateSession(progress.level)
-    startSession(questions)
+  const start = useCallback((overrideLevel?: number) => {
+    const level = overrideLevel ?? progress.level
+    const questions = generateSession(level)
+    startSession(questions, level)
     navigate('/game')
   }, [progress.level, startSession, navigate])
 
   const submitAnswer = useCallback(
     (correct: boolean, reactionTimeMs: number) => {
       if (!session) return
-      const { timeLimitMs } = getDifficultyParams(progress.level)
+      const { timeLimitMs } = getDifficultyParams(session.sessionLevel)
       const score = calcQuestionScore({
         correct,
         reactionTimeMs,
@@ -75,8 +76,8 @@ export function useGameSession() {
   }, [session, applySessionResult, navigate])
 
   const handleTimeout = useCallback(() => {
-    submitAnswer(false, getDifficultyParams(progress.level).timeLimitMs)
-  }, [submitAnswer, progress.level])
+    submitAnswer(false, getDifficultyParams(session?.sessionLevel ?? progress.level).timeLimitMs)
+  }, [submitAnswer, session?.sessionLevel, progress.level])
 
   return { session, start, submitAnswer, handleTimeout, resetSession }
 }
