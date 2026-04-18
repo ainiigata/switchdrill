@@ -6,7 +6,7 @@ import { Dashboard } from './pages/Dashboard'
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/switchdrill">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/game" element={<Game />} />
