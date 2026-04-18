@@ -17,61 +17,95 @@ function randomInt(min: number, max: number): number {
 }
 
 // --- 計算ゲーム ---
-// lv1-15:  1桁+/-、選択肢の差±5
-// lv16-30: ×追加、2桁の数（10-20）、選択肢の差±3
-// lv31-45: ÷追加、2桁の数（10-30）、選択肢の差±2
-// lv46-50: 全演算子、大きな数（10-49）、選択肢の差±1
+// lv1-10:  1桁+/-のみ、選択肢±3〜5
+// lv11-20: ×追加、1桁〜2桁(2-15)、選択肢±2〜3
+// lv21-30: ÷追加、2桁(5-25)、×は2桁×1桁、選択肢±1〜2
+// lv31-40: 2桁+/-（10-49）、2桁×1桁(11-19×2-9)、選択肢±1
+// lv41-50: 2桁×1桁(12-29×2-9)、÷(2桁÷1桁)、選択肢がどれも近くて紛らわしい
 
 function generateCalcQuestion(level: number): CalcQuestion {
   type Op = CalcQuestion['operator']
   let operators: Op[]
-  let maxA: number
-  let maxB: number
-  let spread: number  // 不正解の選択肢のばらつき幅
+  let spread: number
 
-  if (level <= 15) {
+  if (level <= 10) {
     operators = ['+', '-']
-    maxA = 9; maxB = 9; spread = 5
-  } else if (level <= 30) {
+    spread = randomInt(3, 5)
+  } else if (level <= 20) {
     operators = ['+', '-', '×']
-    maxA = 20; maxB = 9; spread = 3
-  } else if (level <= 45) {
+    spread = randomInt(2, 3)
+  } else if (level <= 30) {
     operators = ['+', '-', '×', '÷']
-    maxA = 30; maxB = 9; spread = 2
+    spread = randomInt(1, 2)
+  } else if (level <= 40) {
+    operators = ['+', '-', '×', '÷']
+    spread = 1
   } else {
-    operators = ['+', '-', '×', '÷']
-    maxA = 49; maxB = 9; spread = 1
+    operators = ['×', '÷', '+', '-']
+    spread = 1
   }
 
   const op = operators[randomInt(0, operators.length - 1)]
   let a: number, b: number, answer: number
 
-  if (op === '÷') {
-    // 割り切れる問題を生成: (b × result) ÷ b
-    b = randomInt(2, maxB)
-    const result = randomInt(2, Math.min(9, Math.floor(maxA / b)))
-    a = b * result
-    answer = result
-  } else if (op === '×') {
-    a = randomInt(2, Math.min(maxA, 12))
-    b = randomInt(2, maxB)
-    answer = a * b
-  } else if (op === '-') {
-    // 答えが正になるようにする
-    b = randomInt(1, Math.min(maxB, maxA - 1))
-    a = randomInt(b + 1, maxA)
-    answer = a - b
-  } else {
-    a = randomInt(1, maxA)
-    b = randomInt(1, maxB)
+  if (op === '+') {
+    if (level <= 10) {
+      a = randomInt(1, 9); b = randomInt(1, 9)
+    } else if (level <= 20) {
+      a = randomInt(5, 15); b = randomInt(3, 9)
+    } else if (level <= 30) {
+      a = randomInt(10, 25); b = randomInt(5, 15)
+    } else {
+      a = randomInt(10, 49); b = randomInt(10, 49)
+    }
     answer = a + b
+  } else if (op === '-') {
+    if (level <= 10) {
+      b = randomInt(1, 8); a = randomInt(b + 1, 9)
+    } else if (level <= 20) {
+      b = randomInt(3, 9); a = randomInt(b + 1, 15)
+    } else if (level <= 30) {
+      b = randomInt(5, 15); a = randomInt(b + 5, 30)
+    } else {
+      b = randomInt(10, 40); a = randomInt(b + 5, 99)
+    }
+    answer = a - b
+  } else if (op === '×') {
+    if (level <= 20) {
+      a = randomInt(2, 9); b = randomInt(2, 9)
+    } else if (level <= 30) {
+      a = randomInt(2, 15); b = randomInt(2, 9)
+    } else {
+      a = randomInt(11, 29); b = randomInt(2, 9)
+    }
+    answer = a * b
+  } else {
+    // ÷ : 割り切れる問題
+    if (level <= 30) {
+      b = randomInt(2, 9)
+      const q = randomInt(2, 9)
+      a = b * q; answer = q
+    } else {
+      b = randomInt(2, 9)
+      const q = randomInt(5, 19)
+      a = b * q; answer = q
+    }
   }
 
+  // 不正解の選択肢: spread=1のとき answer±1〜2になるよう工夫
   const wrongAnswers = new Set<number>()
-  while (wrongAnswers.size < 3) {
+  let attempt = 0
+  while (wrongAnswers.size < 3 && attempt < 30) {
+    attempt++
     const offset = randomInt(1, spread) * (Math.random() < 0.5 ? 1 : -1)
     const w = answer + offset
     if (w !== answer && w > 0) wrongAnswers.add(w)
+  }
+  // 万が一3個揃わなかった場合の保険
+  let fallback = answer + 1
+  while (wrongAnswers.size < 3) {
+    if (!wrongAnswers.has(fallback) && fallback !== answer) wrongAnswers.add(fallback)
+    fallback++
   }
   return { type: 'calc', a, b, operator: op, answer, choices: shuffle([answer, ...wrongAnswers]) }
 }

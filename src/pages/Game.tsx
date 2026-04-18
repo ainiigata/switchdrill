@@ -29,11 +29,10 @@ export function Game() {
   const { session } = useGameStore()
   const { submitAnswer, handleTimeout } = useGameSession()
   const { timeLimitMs } = getDifficultyParams(session?.sessionLevel ?? 1)
-  const { elapsedMs, start, reset } = useTimer(timeLimitMs, handleTimeout)
+  const { elapsedMs, start } = useTimer(timeLimitMs, handleTimeout)
 
   useEffect(() => {
     if (!session) { navigate('/'); return }
-    reset()
     start()
   }, [session?.currentIndex])
 
